@@ -1,0 +1,17 @@
+CONTIKI=../..
+
+all: myproject
+
+# add your application
+APPS+=Apps1
+APPS+=Apps2
+APPS+=myapps
+
+# set compilation optimization parameter
+CFLAGS+=-Os
+
+# add project config file which contains global parameters
+CLFAGS+=-DPROJECTCONFH=\"project-conf.h\"
+
+# include contiki makefile
+include $(CONTIKI)/Makefile.include
