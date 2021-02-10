@@ -1,26 +1,28 @@
 diff -crBN con0/core/dev/leds.c con1/core/dev/leds.c
 *** con0/core/dev/leds.c	2012-07-17 12:19:11.000000000 +0200
---- con1/core/dev/leds.c	2021-02-08 23:03:11.657185519 +0100
+--- con1/core/dev/leds.c	2021-02-10 14:48:58.343297099 +0100
 ***************
-*** 80,86 ****
+*** 79,86 ****
+    unsigned char inv;
     inv = ~(leds ^ invert);
     leds_invert(inv);
-  
+! 
 !   clock_delay(400);
   
     leds_invert(inv);
   }
---- 80,86 ----
+--- 79,86 ----
+    unsigned char inv;
     inv = ~(leds ^ invert);
     leds_invert(inv);
-  
-!   //clock_delay(400);
+! //  PATCH HERE
+! //  clock_delay(400);
   
     leds_invert(inv);
   }
 diff -crBN con0/core/dev/leds.c~ con1/core/dev/leds.c~
 *** con0/core/dev/leds.c~	1970-01-01 01:00:00.000000000 +0100
---- con1/core/dev/leds.c~	2021-02-08 23:03:06.761185898 +0100
+--- con1/core/dev/leds.c~	2021-02-10 14:48:56.323297308 +0100
 ***************
 *** 0 ****
 --- 1,123 ----
@@ -105,8 +107,8 @@ diff -crBN con0/core/dev/leds.c~ con1/core/dev/leds.c~
 +   unsigned char inv;
 +   inv = ~(leds ^ invert);
 +   leds_invert(inv);
-+ 
-+   //clock_delay(400);
++ //  PATCH HERE
++ //  clock_delay(400);
 + 
 +   leds_invert(inv);
 + }
@@ -149,30 +151,30 @@ diff -crBN con0/core/dev/leds.c~ con1/core/dev/leds.c~
 + /*---------------------------------------------------------------------------*/
 diff -crBN con0/platform/avr-atmega128rfa1/contiki-main.c con1/platform/avr-atmega128rfa1/contiki-main.c
 *** con0/platform/avr-atmega128rfa1/contiki-main.c	2012-07-17 12:19:11.000000000 +0200
---- con1/platform/avr-atmega128rfa1/contiki-main.c	2021-02-08 23:02:24.893181988 +0100
+--- con1/platform/avr-atmega128rfa1/contiki-main.c	2021-02-10 14:48:30.703297243 +0100
 ***************
 *** 176,199 ****
   /* The Raven implements a serial command and data interface via uart0 to a 3290p,
    * which could be duplicated using another host computer.
    */
-- #if !RF230BB_CONF_LEDONPORTE1   //Conflicts with USART0
-- #ifdef RAVEN_LCD_INTERFACE
--   rs232_init(RS232_PORT_0, USART_BAUD_38400,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
--   rs232_set_input(0,raven_lcd_serial_input);
-- #else
--   /* Generic or slip connection on uart0 */
--   rs232_init(RS232_PORT_0, USART_BAUD_38400,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
-- #endif
-- #endif
-  
-!   /* Second rs232 port for debugging or slip alternative */
-!   rs232_init(RS232_PORT_1, USART_BAUD_57600,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
-!   /* Redirect stdout */
-! #if RF230BB_CONF_LEDONPORTE1 || defined(RAVEN_LCD_INTERFACE)
-!   rs232_redirect_stdout(RS232_PORT_1);
+! #if !RF230BB_CONF_LEDONPORTE1   //Conflicts with USART0
+! #ifdef RAVEN_LCD_INTERFACE
+!   rs232_init(RS232_PORT_0, USART_BAUD_38400,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
+!   rs232_set_input(0,raven_lcd_serial_input);
 ! #else
-!   rs232_redirect_stdout(RS232_PORT_0);
+!   /* Generic or slip connection on uart0 */
+!   rs232_init(RS232_PORT_0, USART_BAUD_38400,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
 ! #endif
+! #endif
+  
+-   /* Second rs232 port for debugging or slip alternative */
+-   rs232_init(RS232_PORT_1, USART_BAUD_57600,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
+-   /* Redirect stdout */
+- #if RF230BB_CONF_LEDONPORTE1 || defined(RAVEN_LCD_INTERFACE)
+-   rs232_redirect_stdout(RS232_PORT_1);
+- #else
+-   rs232_redirect_stdout(RS232_PORT_0);
+- #endif
     clock_init();
   
     if(MCUSR & (1<<PORF )) PRINTD("Power-on reset.\n");
@@ -180,17 +182,17 @@ diff -crBN con0/platform/avr-atmega128rfa1/contiki-main.c con1/platform/avr-atme
   /* The Raven implements a serial command and data interface via uart0 to a 3290p,
    * which could be duplicated using another host computer.
    */
-  
-!   rs232_init (RS232_PORT_1, USART_BAUD_19200, USART_PARITY_NONE|USART_STOP_BITS_1|USART_DATA_BITS_8);
+! // PATCH HERE
+!   rs232_init (RS232_PORT_1, USART_BAUD_19200, USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
 !   rs232_set_input (RS232_PORT_1, serial_line_input_byte);
 !   rs232_redirect_stdout (RS232_PORT_1);
-! 
+  
     clock_init();
   
     if(MCUSR & (1<<PORF )) PRINTD("Power-on reset.\n");
 diff -crBN con0/platform/avr-atmega128rfa1/contiki-main.c~ con1/platform/avr-atmega128rfa1/contiki-main.c~
 *** con0/platform/avr-atmega128rfa1/contiki-main.c~	1970-01-01 01:00:00.000000000 +0100
---- con1/platform/avr-atmega128rfa1/contiki-main.c~	2021-02-08 23:00:19.393185190 +0100
+--- con1/platform/avr-atmega128rfa1/contiki-main.c~	2021-02-10 14:47:30.239296922 +0100
 ***************
 *** 0 ****
 --- 1,587 ----
@@ -372,8 +374,8 @@ diff -crBN con0/platform/avr-atmega128rfa1/contiki-main.c~ con1/platform/avr-atm
 + /* The Raven implements a serial command and data interface via uart0 to a 3290p,
 +  * which could be duplicated using another host computer.
 +  */
-+ 
-+   rs232_init (RS232_PORT_1, USART_BAUD_19200, USART_PARITY_NONE|USART_STOP_BITS_1|USART_DATA_BITS_8);
++ // PATCH HERE
++   rs232_init (RS232_PORT_1, USART_BAUD_19200, USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
 +   rs232_set_input (RS232_PORT_1, serial_line_input_byte);
 +   rs232_redirect_stdout (RS232_PORT_1);
 + 
