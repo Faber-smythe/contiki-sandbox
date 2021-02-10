@@ -22,4 +22,4 @@ And run the installation file :
 bash install.sh
 ```
 
->> This assignment was a teamwork of Johann IMBERT and Cédrine SOCQUET
+> This assignment was a teamwork of Johann IMBERT and Cédrine SOCQUET
