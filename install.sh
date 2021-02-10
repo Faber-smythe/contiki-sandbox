@@ -28,13 +28,13 @@ if unzip contiki.zip; then
 		no|NO|N|n|No)
 			cd "examples/myproject"
 			echo "================================"
-			echo -p "Installation was succesful. Compile when you like with 'make' then run executable with './myproject.native'" ;;
+			echo -p "Installation was succesful. Compile when you like using 'make' in 'contiki/examples/myproject/' then run executable with './myproject.native'" ;;
 		*)
 			cd "examples/myproject"
 			
 			if make; then
 				echo "================================"
-				echo "Installation was sucessful. Run executable when you like './myproject.native'"
+				echo "Installation was sucessful. Run executable when you like 'contiki/examples/myproject/myproject.native'"
 			fi
 		;;
 	esac
